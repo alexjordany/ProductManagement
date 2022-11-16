@@ -18,8 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Products\Commands\UpdateProduct" />
-      <Folder Include="Features\Products\Queries\GetProductDetail" />
       <Folder Include="Features\Products\Queries\GetProductsByName" />
       <Folder Include="Features\Products\Queries\GetProductsList" />
       <Folder Include="Profiles\Products" />
