@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManagement.Domain", "ProductManagement.Domain\ProductManagement.Domain.csproj", "{9B9D2609-6F78-4CDB-AE16-3671A7466D25}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManagement.Persistence", "ProductManagement.Persistence\ProductManagement.Persistence.csproj", "{930CF2CB-CEC6-4745-A2EF-5D2D6188401B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{9B9D2609-6F78-4CDB-AE16-3671A7466D25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B9D2609-6F78-4CDB-AE16-3671A7466D25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B9D2609-6F78-4CDB-AE16-3671A7466D25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930CF2CB-CEC6-4745-A2EF-5D2D6188401B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930CF2CB-CEC6-4745-A2EF-5D2D6188401B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930CF2CB-CEC6-4745-A2EF-5D2D6188401B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930CF2CB-CEC6-4745-A2EF-5D2D6188401B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
