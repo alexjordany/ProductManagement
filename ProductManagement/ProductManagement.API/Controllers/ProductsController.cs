@@ -74,7 +74,6 @@ namespace ProductManagement.API.Controllers
 
         [HttpGet("getbyname/{name}", Name = "GetProductsByName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List<ProductByNameVm>>> GetProductsByName(string name)
         {
             var dtos = await _mediator.Send(new GetProductByNameQuery { Name = name });
