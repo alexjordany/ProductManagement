@@ -1,11 +1,9 @@
-namespace ProductManagement.Domain.Entities;
+namespace ProductManagement.Application.Features.Products.Commands.CreateProduct;
 
-public class Product : AuditableEntity
+public class CreateProductCommand : IRequest<CreateProductCommandResponse>
 {
-    public int ProductId { get; set; }
     public string ProductName { get; set; } = string.Empty;
     public int ProductQuantity { get; set; }
     public double ProductPrice { get; set; }
     public string? ProductDescription { get; set; }
-    
 }
