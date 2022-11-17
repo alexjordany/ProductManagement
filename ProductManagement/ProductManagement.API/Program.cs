@@ -5,12 +5,13 @@ using ProductManagement.Identity;
 using ProductManagement.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
+
 IConfiguration configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
-builder.Services.AddPersistenceServices(configuration);
-builder.Services.AddIdentityServices(configuration);
+builder.Services.AddPersistenceServices(configuration,builder.Environment );
+builder.Services.AddIdentityServices(configuration, builder.Environment);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -23,9 +24,9 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Description = @"Para usar la autenticacion con JWT Tokens.
+                        Escriba Bearer antes del token generado luego espacio y el token generado.
+                        Por ejemplo: Bearer 12345abcdef.....  ",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,

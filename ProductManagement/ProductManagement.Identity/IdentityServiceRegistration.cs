@@ -12,69 +12,75 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using ProductManagement.Application.Contracts.Identity;
 using ProductManagement.Identity.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace ProductManagement.Identity;
 
 public static class IdentityServiceRegistration
 {
-    public static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+    public static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    {
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            services.AddDbContext<ProductManagementIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ProductManagementIdentityConnectionString"),
+        if (!environment.IsEnvironment("Development"))
+            services.AddDbContext<ProductManagementIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("PMIdentityConnectionString"),
                 b => b.MigrationsAssembly(typeof(ProductManagementIdentityDbContext).Assembly.FullName)));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ProductManagementIdentityDbContext>().AddDefaultTokenProviders();
+        services.AddDbContext<ProductManagementIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ProductManagementIdentityConnectionString"),
+                b => b.MigrationsAssembly(typeof(ProductManagementIdentityDbContext).Assembly.FullName)));
 
-            services.AddTransient<ProductManagement.Application.Contracts.Identity.IAuthenticationService, ProductManagement.Identity.Services.AuthenticationService>();
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ProductManagementIdentityDbContext>().AddDefaultTokenProviders();
 
-            services.AddAuthentication(options =>
+        services.AddTransient<ProductManagement.Application.Contracts.Identity.IAuthenticationService, ProductManagement.Identity.Services.AuthenticationService>();
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+            .AddJwtBearer(o =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(o =>
+                o.RequireHttpsMetadata = false;
+                o.SaveToken = false;
+                o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    o.RequireHttpsMetadata = false;
-                    o.SaveToken = false;
-                    o.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero,
-                        ValidIssuer = configuration["JwtSettings:Issuer"],
-                        ValidAudience = configuration["JwtSettings:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
-                    };
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = configuration["JwtSettings:Issuer"],
+                    ValidAudience = configuration["JwtSettings:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+                };
 
-                    o.Events = new JwtBearerEvents()
+                o.Events = new JwtBearerEvents()
+                {
+                    OnAuthenticationFailed = c =>
                     {
-                        OnAuthenticationFailed = c =>
-                        {
-                            c.NoResult();
-                            c.Response.StatusCode = 500;
-                            c.Response.ContentType = "text/plain";
-                            return c.Response.WriteAsync(c.Exception.ToString());
-                        },
-                        OnChallenge = context =>
-                        {
-                            context.HandleResponse();
-                            context.Response.StatusCode = 401;
-                            context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject("401 Not authorized");
-                            return context.Response.WriteAsync(result);
-                        },
-                        OnForbidden = context =>
-                        {
-                            context.Response.StatusCode = 403;
-                            context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject("403 Not authorized");
-                            return context.Response.WriteAsync(result);
-                        },
-                    };
-                });
-        }
+                        c.NoResult();
+                        c.Response.StatusCode = 500;
+                        c.Response.ContentType = "text/plain";
+                        return c.Response.WriteAsync(c.Exception.ToString());
+                    },
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        var result = JsonConvert.SerializeObject("401 Not authorized");
+                        return context.Response.WriteAsync(result);
+                    },
+                    OnForbidden = context =>
+                    {
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+                        var result = JsonConvert.SerializeObject("403 Not authorized");
+                        return context.Response.WriteAsync(result);
+                    },
+                };
+            });
+    }
 }
