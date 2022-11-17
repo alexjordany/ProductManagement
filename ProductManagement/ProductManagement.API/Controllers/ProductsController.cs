@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductManagement.Application.Features.Products.Commands.CreateProduct;
@@ -62,7 +63,8 @@ public class ProductsController : ControllerBase
         var dtos = await _mediator.Send(new GetProductsListQuery());
         return Ok(dtos);
     }
-
+    
+    [Authorize]
     [HttpGet("{id:int}", Name = "GetProductById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

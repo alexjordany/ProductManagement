@@ -5,7 +5,7 @@ namespace ProductManagement.Persistence;
 
 public class ProductManagementDbContext : DbContext
 {
-    public ProductManagementDbContext(DbContextOptions options) : base(options)
+    public ProductManagementDbContext(DbContextOptions<ProductManagementDbContext> options) : base(options)
     {
             
     }

@@ -10,6 +10,8 @@ using ProductManagement.Identity.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using ProductManagement.Application.Contracts.Identity;
+using ProductManagement.Identity.Services;
 
 namespace ProductManagement.Identity;
 
@@ -25,7 +27,7 @@ public static class IdentityServiceRegistration
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ProductManagementIdentityDbContext>().AddDefaultTokenProviders();
 
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<ProductManagement.Application.Contracts.Identity.IAuthenticationService, ProductManagement.Identity.Services.AuthenticationService>();
 
             services.AddAuthentication(options =>
             {

@@ -70,6 +70,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseAuthentication();
+
 app.UseSwagger();
 app.UseSwaggerUI(s =>
 {
