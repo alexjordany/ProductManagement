@@ -19,7 +19,7 @@ public static class IdentityServiceRegistration
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-            services.AddDbContext<ProductManagementIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ProductManagementIdentityDbContext"),
+            services.AddDbContext<ProductManagementIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ProductManagementIdentityConnectionString"),
                 b => b.MigrationsAssembly(typeof(ProductManagementIdentityDbContext).Assembly.FullName)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
